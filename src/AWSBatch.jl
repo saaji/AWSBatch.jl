@@ -88,9 +88,11 @@ function run_batch(;
             isempty(image) && (image = container["image"])
             isempty(role) && (role = container["jobRoleArn"])
 
+            resources = Dict(map(x -> x["type"] => x["value"], container["resourceRequirements"]))
+
             # Update container override parameters
-            vcpus == 1 && (vcpus = container["vcpus"])
-            memory < 0 && (memory = container["memory"])
+            vcpus == 1 && (vcpus = resources["VCPU"])
+            memory < 0 && (memory = resources["MEMORY"])
             isempty(cmd) && (cmd = Cmd(Vector{String}(container["command"])))
         end
     end
